@@ -7,15 +7,15 @@ const Header = () => {
   return (
     <Disclosure as="nav">
       {({ open }) => (
-        <section id="header">
-          <div className="container w-11/12 lg:w-10/12 mx-auto  pt-8">
+        <section id="header h-[18vh]">
+          <div className="container w-11/12 lg:w-11/12 mx-auto  pt-8">
             <div className="flex items-center lg:hidden">
               <div className="logo">
-                <img src="/logo.png" alt="Logo" className="w-9/12" />
+                <img src="/logo.svg" alt="Logo" className="w-9/12" />
               </div>
 
               {/* Mobile menu button*/}
-              <Disclosure.Button className="ml-auto flex rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
+              <Disclosure.Button className="ml-auto flex rounded-md p-2 text-black hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white">
                 <span className="sr-only">Open main menu</span>
                 {open ? (
                   <XMarkIcon
@@ -24,7 +24,7 @@ const Header = () => {
                   />
                 ) : (
                   <Bars3Icon
-                    className="block h-10 w-10 text-lightgrey "
+                    className="block h-10 w-10 text-dark "
                     aria-hidden="true"
                   />
                 )}
@@ -32,23 +32,32 @@ const Header = () => {
             </div>
             <div className="hidden lg:flex justify-between">
               <div className="logo">
-                <img src="/logo.png" alt="Logo" />
+                <img src="/logo.svg" alt="Logo" className="w-5/12" />
 
                 <div className="menu">
-                  <ul className="flex justify-between mt-5">
-                    <li>Home</li>
-                    <li>Community</li>
-                    <li>Docs</li>
-                    <li>Blog</li>
+                  <ul className="flex lg:space-x-16 mt-5">
+                    <li>
+                      <Link href="#">Home</Link>
+                    </li>
+                    <li>
+                      {" "}
+                      <Link href="#">Community</Link>
+                    </li>
+                    <li>
+                      <Link href="#">Docs</Link>
+                    </li>
+                    <li>
+                      <Link href="#">Blog</Link>
+                    </li>
                   </ul>
                 </div>
               </div>
 
               <div className="buttons flex space-x-4 items-center">
-                <button className="bg-darkColor w-52 h-16 rounded-xl">
+                <button className="bg-darkColor w-52 h-16 rounded-xl shadow-2xl">
                   <a className="text-white font-semibold">New Bounty</a>
                 </button>
-                <button className="bg-lightblue w-52 h-16 rounded-xl">
+                <button className="bg-lightblue w-52 h-16 rounded-xl shadow-2xl">
                   <a className="text-white font-semibold">Connect Wallet</a>
                 </button>
               </div>
@@ -58,14 +67,23 @@ const Header = () => {
             <div className="h-screen px-3 pt-24 pb-3 bg-[#fff]">
               <div className="text-center">
                 <ul className="space-y-3">
-                  <li>Home</li>
-                  <li>Community</li>
-                  <li>Docs</li>
-                  <li>Blog</li>
+                <li>
+                      <Link href="#">Home</Link>
+                    </li>
+                    <li>
+                      {" "}
+                      <Link href="#">Community</Link>
+                    </li>
+                    <li>
+                      <Link href="#">Docs</Link>
+                    </li>
+                    <li>
+                      <Link href="#">Blog</Link>
+                    </li>
                 </ul>
               </div>
               <div className="buttons flex flex-col items-center justify-center mt-6">
-                <button className="bg-red w-52 h-16 rounded-xl">
+                <button className="bg-pinkColor w-52 h-16 rounded-xl">
                   <a className="text-white font-semibold">New Bounty</a>
                 </button>
                 <button className="bg-lightblue w-52 h-16 rounded-xl mt-6">
