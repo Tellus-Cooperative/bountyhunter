@@ -1,34 +1,35 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Cards from "../common/cards";
 import Filterbutton from "../common/filters";
-import cardSide from './cards.json';
+import cardSide from "./cards.json";
 
 const filterMenu = [
   {
     title: "Type",
-    menu: ["Cooperative","Competitive","Hackathon"]
+    menu: ["Cooperative", "Competitive", "Hackathon"],
   },
   {
     title: "Level",
-    menu: ["Beginner","Intermediate","Advanced"]
+    menu: ["Beginner", "Intermediate", "Advanced"],
   },
   {
     title: "Topic",
-    menu: ["Smart Contracts","Vanilla Stellar","Design"]
+    menu: ["Smart Contracts", "Vanilla Stellar", "Design"],
   },
   {
     title: "Payment",
-    menu: ["0-1000 XLM ","1001-10,000 XLM","+10,001 XLM"]
-  }
-]
+    menu: ["0-1000 XLM ", "1001-10,000 XLM", "+10,001 XLM"],
+  },
+];
 
 const LandingPage = () => {
-
   const [cardData, setCardData] = useState(cardSide.card[0]);
+  const [mobView, setMobView] = useState(false);
 
-  const pullData = (data)=> {
-  setCardData(data)
-  }
+  const pullData = (data) => {
+    setCardData(data);
+    setMobView(true);
+  };
 
   return (
     <>
@@ -37,54 +38,53 @@ const LandingPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="cards">
               <div className="flex justify-between">
-                {filterMenu.map((item,index) => (
-                <Filterbutton key={index} data={item} />
+                {filterMenu.map((item, index) => (
+                  <Filterbutton key={index} data={item} />
                 ))}
               </div>
 
-              <div className="mt-6 overflow-y-auto h-[48%] lg:h-[78%] rounded-xl shadow-xl">
-                {cardSide.card.map((item,index) => (
-                <Cards data={item} callBack={pullData}/>
+              <div className={`${mobView?'hidden lg:block':' '} mt-6 overflow-y-auto h-[48%] lg:h-[78%] rounded-xl shadow-xl`}>
+                {cardSide.card.map((item, index) => (
+                  <Cards data={item} callBack={pullData} />
                 ))}
               </div>
             </div>
 
-            <div className="content mt-20 px-7 py-5 rounded-xl bg-cardscolor h-[76%] rounded-xl shadow-xl">
-              <h1 className="pt-10 text-xl">{cardData?.subtitle}</h1>
-              <h1 className="text-black mt-3 text-3xl font-medium">
-               {cardData?.title}
+            <div className="content mt-10 lg:mt-20 px-2 lg:px-7 py-5 rounded-xl bg-cardscolor h-[76%] rounded-xl shadow-xl">
+            <i onClick={()=>setMobView(false)} className="text-3xl lg:hidden fal fa-long-arrow-left"></i>
+              <h1 className="lg:pt-10 text-base lg:text-xl">{cardData?.subtitle}</h1>
+              <h1 className="text-black mt-3 text-xl lg:text-3xl font-medium">
+                {cardData?.title}
               </h1>
 
               <div className="mt-8">
-                <div className="flex space-x-3">
-                  <button className="bg-lightgrey w-44 h-10 flex items-center justify-center rounded-2xl shadow-xl">
-                    <p className="text-sm">Cooperative </p>
-                  </button>
-                  <button className="bg-lightgrey w-44 h-10 flex items-center justify-center rounded-2xl shadow-xl">
-                    <p className="text-sm">Advanced</p>
-                  </button>
-                  <button className="bg-lightgrey w-44 h-10 flex items-center justify-center rounded-2xl shadow-xl">
-                    <p className="text-sm">Smart Contracts</p>
-                  </button>
-                </div>
+              <div className="flex flex-wrap lg:space-x-3">
+              <button className="bg-lightgrey mb-4 w-36 lg:w-40 h-10 flex items-center justify-center rounded-2xl shadow-xl">
+                <p className="text-sm">Cooperative </p>
+              </button>
+              <button className="bg-lightgrey mb-4 ml-3 lg:0 w-36 lg:w-40 h-10 flex items-center justify-center rounded-2xl shadow-xl">
+                <p className="text-sm">Advanced</p>
+              </button>
+              <button className="bg-lightgrey mb-4 w-36 lg:w-40 h-10 flex items-center justify-center rounded-2xl shadow-xl">
+                <p className="text-sm">Smart Contracts</p>
+              </button>
+            </div>
               </div>
 
-              <div className="flex justify-between mt-12">
+              <div className="flex justify-between mt-6 lg:mt-12">
                 <button className="bg-lightgrey w-40 h-10 flex items-center justify-center rounded-2xl shadow-xl">
-                  <p>{cardData.xlm}</p>
+                  <p className="text-sm">{cardData.xlm}</p>
                 </button>
 
                 <button className="bg-darkColor w-40 h-12 flex items-center justify-center rounded-2xl shadow-xl">
-                  <h1>Apply</h1>
+                  <h1 className="text-sm">Apply</h1>
                 </button>
               </div>
 
               <div className="mt-14 overflow-y-auto h-[40%]">
-                <p className="robotosimple">
-                {cardData.longDescription}
-                </p>
+                <p className="robotosimple">{cardData.longDescription}</p>
                 <p className="robotosimple mt-5">
-                As a bounty hunter for the Soroban Contract Writing in Rust,
+                  As a bounty hunter for the Soroban Contract Writing in Rust,
                   you will be responsible for thoroughly testing our platform
                   and identifying any potential security vulnerabilities or
                   bugs. You will be tasked with conducting comprehensive
