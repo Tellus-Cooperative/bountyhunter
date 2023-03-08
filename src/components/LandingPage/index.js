@@ -1,8 +1,35 @@
-import React from "react";
+import React, {useState} from "react";
 import Cards from "../common/cards";
 import Filterbutton from "../common/filters";
+import cardSide from './cards.json';
+
+const filterMenu = [
+  {
+    title: "Type",
+    menu: ["Cooperative","Competitive","Hackathon"]
+  },
+  {
+    title: "Level",
+    menu: ["Beginner","Intermediate","Advanced"]
+  },
+  {
+    title: "Topic",
+    menu: ["Smart Contracts","Vanilla Stellar","Design"]
+  },
+  {
+    title: "Payment",
+    menu: ["0-1000 XLM ","1001-10,000 XLM","+10,001 XLM"]
+  }
+]
 
 const LandingPage = () => {
+
+  const [cardData, setCardData] = useState(cardSide.card[0]);
+
+  const pullData = (data)=> {
+  setCardData(data)
+  }
+
   return (
     <>
       <section id="landingpage h-screen overflow-hidden">
@@ -10,23 +37,22 @@ const LandingPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="cards">
               <div className="flex justify-between">
-                <Filterbutton data="Type" />
-                <Filterbutton data="Level" />
-                <Filterbutton data="Topic" />
-                <Filterbutton data="Payment" />
+                {filterMenu.map((item,index) => (
+                <Filterbutton key={index} data={item} />
+                ))}
               </div>
 
-              <div className="mt-6 overflow-y-auto h-[48%] lg:h-[80%]">
-                <Cards />
-                <Cards />
-                <Cards />
+              <div className="mt-6 overflow-y-auto h-[48%] lg:h-[78%] rounded-xl shadow-xl">
+                {cardSide.card.map((item,index) => (
+                <Cards data={item} callBack={pullData}/>
+                ))}
               </div>
             </div>
 
-            <div className="content mt-20 px-7 py-5 rounded-xl bg-cardscolor">
-              <h1 className="pt-10 text-xl">Tellus Cooperative</h1>
+            <div className="content mt-20 px-7 py-5 rounded-xl bg-cardscolor h-[76%] rounded-xl shadow-xl">
+              <h1 className="pt-10 text-xl">{cardData?.subtitle}</h1>
               <h1 className="text-black mt-3 text-3xl font-medium">
-                Soroban Contract Writing in Rust
+               {cardData?.title}
               </h1>
 
               <div className="mt-8">
@@ -45,7 +71,7 @@ const LandingPage = () => {
 
               <div className="flex justify-between mt-12">
                 <button className="bg-lightgrey w-40 h-10 flex items-center justify-center rounded-2xl shadow-xl">
-                  <p>10,000 XLM</p>
+                  <p>{cardData.xlm}</p>
                 </button>
 
                 <button className="bg-darkColor w-40 h-12 flex items-center justify-center rounded-2xl shadow-xl">
@@ -53,19 +79,9 @@ const LandingPage = () => {
                 </button>
               </div>
 
-              <div className="mt-14 overflow-y-auto h-[30%]">
+              <div className="mt-14 overflow-y-auto h-[40%]">
                 <p className="robotosimple">
-                  As a bounty hunter for the Soroban Contract Writing in Rust,
-                  you will be responsible for thoroughly testing our platform
-                  and identifying any potential security vulnerabilities or
-                  bugs. You will be tasked with conducting comprehensive
-                  penetration testing and code review to ensure that our
-                  platform is secure, reliable, and efficient. Successful
-                  candidates will have a strong understanding of Rust
-                  development, as well as experience working with blockchain
-                  technology and smart contract writing. You should be
-                  comfortable working with cryptographic algorithms, as well as
-                  developing and testing secure, reliable, and efficient.
+                {cardData.longDescription}
                 </p>
                 <p className="robotosimple mt-5">
                 As a bounty hunter for the Soroban Contract Writing in Rust,
