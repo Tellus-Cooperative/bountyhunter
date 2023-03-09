@@ -30,6 +30,7 @@ export default function Document() {
           rel="stylesheet"
         />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-freighter-api/1.1.2/index.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/index.min.js"></script>
       </Head>
       <body>
         <Main />

@@ -3,24 +3,25 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useSorobanReact } from "@soroban-react/core";
 import { ConnectButton } from "@soroban-react/connect-button";
+import { WalletData } from "@soroban-react/wallet-data";
 
 import Link from "next/link";
 
 const Header = () => {
-  const [publickKey, setPublicKey] = useState(true);
-  const sorobanContext = useSorobanReact()
+  const [publicKey, setPublicKey] = useState(false);
+  const sorobanContext = useSorobanReact();
 
-useEffect(() => {
-  getKey();
-})
+  useEffect(() => {
+    getKey();
+  });
 
-  const getKey = async() => {
-    console.log(await window.freighterApi.getPublicKey(), "Connected")
+  const getKey = async () => {
+    console.log(await window.freighterApi.getPublicKey(), "Connected");
 
-    if(window.freighterApi.getPublicKey()){
-      setPublicKey(false);
+    if (window.freighterApi.getPublicKey()) {
+      setPublicKey(true);
     }
-  }
+  };
 
   return (
     <Disclosure as="nav">
@@ -72,20 +73,29 @@ useEffect(() => {
               </div>
 
               <div className="buttons flex space-x-4 items-center">
-                <button className="bg-darkColor w-52 h-16 rounded-xl shadow-2xl">
+                <button
+                  disabled={!publicKey}
+                  className={`${
+                    publicKey ? "bg-lightPink" : "bg-darkColor"
+                  } w-52 h-16 rounded-xl shadow-2xl`}
+                >
                   <a className="text-white font-semibold">New Bounty</a>
                 </button>
-                {/* <button className="bg-lightblue w-52 h-16 rounded-xl shadow-2xl">
-                  <a className="text-white font-semibold">Connect Wallet</a>
-                </button> */}
-   
-               {publickKey && (
-                <ConnectButton
-                  label="Connect your Wallet"
-                  sorobanContext={sorobanContext}
-                />
+
+                {publicKey && (
+                  <button className="bg-lightblue w-52 h-16 rounded-xl shadow-2xl">
+                    <WalletData sorobanContext={sorobanContext} />
+                  </button>
                 )}
-                
+
+                {!publicKey && (
+                  <button className="bg-lightblue w-52 h-16 rounded-xl shadow-2xl">
+                    <ConnectButton
+                      label="Connect  Wallet"
+                      sorobanContext={sorobanContext}
+                    />
+                  </button>
+                )}
               </div>
             </div>
           </div>
