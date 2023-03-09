@@ -1,9 +1,14 @@
 import React from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useSorobanReact } from "@soroban-react/core";
+import { ConnectButton } from "@soroban-react/connect-button";
+
 import Link from "next/link";
 
 const Header = () => {
+  const sorobanContext = useSorobanReact();
+
   return (
     <Disclosure as="nav">
       {({ open }) => (
@@ -57,9 +62,13 @@ const Header = () => {
                 <button className="bg-darkColor w-52 h-16 rounded-xl shadow-2xl">
                   <a className="text-white font-semibold">New Bounty</a>
                 </button>
-                <button className="bg-lightblue w-52 h-16 rounded-xl shadow-2xl">
+                {/* <button className="bg-lightblue w-52 h-16 rounded-xl shadow-2xl">
                   <a className="text-white font-semibold">Connect Wallet</a>
-                </button>
+                </button> */}
+                <ConnectButton
+                  label="Connect your Wallet"
+                  sorobanContext={sorobanContext}
+                />
               </div>
             </div>
           </div>
@@ -67,19 +76,19 @@ const Header = () => {
             <div className="h-screen px-3 pt-24 pb-3 bg-[#fff]">
               <div className="text-center">
                 <ul className="space-y-3">
-                <li>
-                      <Link href="#">Home</Link>
-                    </li>
-                    <li>
-                      {" "}
-                      <Link href="#">Community</Link>
-                    </li>
-                    <li>
-                      <Link href="#">Docs</Link>
-                    </li>
-                    <li>
-                      <Link href="#">Blog</Link>
-                    </li>
+                  <li>
+                    <Link href="#">Home</Link>
+                  </li>
+                  <li>
+                    {" "}
+                    <Link href="#">Community</Link>
+                  </li>
+                  <li>
+                    <Link href="#">Docs</Link>
+                  </li>
+                  <li>
+                    <Link href="#">Blog</Link>
+                  </li>
                 </ul>
               </div>
               <div className="buttons flex flex-col items-center justify-center mt-6">
