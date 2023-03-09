@@ -5,8 +5,9 @@ import MySorobanReactProvider from '@/components/MySorbeanProvider';
 
 const Index = () => {
 
-  useEffect(() => {
-    console.log(window.freighterApi.isConnected(), "Freight API")
+  useEffect(async () => {
+    console.log(await window.freighterApi.getPublicKey()
+      , "Freight API")
   },[])
 
   return ( 
