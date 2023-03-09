@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useSorobanReact } from "@soroban-react/core";
@@ -7,7 +7,20 @@ import { ConnectButton } from "@soroban-react/connect-button";
 import Link from "next/link";
 
 const Header = () => {
-  const sorobanContext = useSorobanReact();
+  const [publickKey, setPublicKey] = useState(true);
+  const sorobanContext = useSorobanReact()
+
+useEffect(() => {
+  getKey();
+})
+
+  const getKey = async() => {
+    console.log(await window.freighterApi.getPublicKey(), "Connected")
+
+    if(window.freighterApi.getPublicKey()){
+      setPublicKey(false);
+    }
+  }
 
   return (
     <Disclosure as="nav">
@@ -65,10 +78,14 @@ const Header = () => {
                 {/* <button className="bg-lightblue w-52 h-16 rounded-xl shadow-2xl">
                   <a className="text-white font-semibold">Connect Wallet</a>
                 </button> */}
+   
+               {publickKey && (
                 <ConnectButton
                   label="Connect your Wallet"
                   sorobanContext={sorobanContext}
                 />
+                )}
+                
               </div>
             </div>
           </div>
