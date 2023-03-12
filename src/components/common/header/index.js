@@ -12,16 +12,16 @@ const Header = () => {
   const sorobanContext = useSorobanReact();
 
   useEffect(() => {
+    console.log(window.freighterApi, "Windows")
     getKey();
-  });
+  },[]);
 
   const getKey = async () => {
-    console.log(await window.freighterApi.getPublicKey(), "Connected");
-
-    if (window.freighterApi.getPublicKey()) {
+    if (window?.freighterApi?.getPublicKey()) {
       setPublicKey(true);
     }
   };
+
 
   return (
     <Disclosure as="nav">
@@ -79,7 +79,7 @@ const Header = () => {
                     publicKey ? "bg-lightPink" : "bg-darkColor"
                   } w-52 h-16 rounded-xl shadow-2xl`}
                 >
-                  <a className="text-white font-semibold">New Bounty</a>
+                  <Link href="/newbounty" className="text-white font-semibold">New Bounty</Link>
                 </button>
 
                 {publicKey && (

@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.10",
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
     "@soroban-react/connect-button": "^3.7.1",
@@ -19,8 +20,7 @@
     "next": "13.2.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "soroban-client": "^0.4.0",
-    "tw-elements": "^1.0.0-beta1"
+    "soroban-client": "^0.4.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.13",

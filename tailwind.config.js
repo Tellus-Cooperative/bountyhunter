@@ -13,7 +13,9 @@ module.exports = {
         cardscolor: "#F9F9F9",
         darkColor: "#979797",
         pinkColor: "#FF5F8A",
-        lightPink: "#FF6392"
+        lightPink: "#FF6392",
+        greenColor: "#71C666",
+        blueColor: "#2E4153"
         
       }
     },

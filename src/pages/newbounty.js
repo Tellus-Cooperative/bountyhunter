@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Layout from "@/components/common/Layout";
-import LandingPage from "@/components/LandingPage";
+import NewBounty from "@/components/NewBounty";
 import MySorobanReactProvider from "@/components/MySorbeanProvider";
 import { ApolloProvider } from "@apollo/client";
 import client from "../lib/apollo-client";
 
-const Index = () => {
+const Bounty = () => {
   return (
     <ApolloProvider client={client}>
       <MySorobanReactProvider>
         <Layout>
-          <LandingPage />
+          <NewBounty />
         </Layout>
       </MySorobanReactProvider>
     </ApolloProvider>
   );
 };
 
-export default Index;
+export default Bounty;
