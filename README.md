@@ -1,9 +1,20 @@
 ![logo](https://github.com/Tellus-Cooperative/bountyhunter/blob/main/public/bhlogo.png?raw=true)
 
+## Bounty Hunter App
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Our goal is to create an open source bounty hunting application that allows users to post and apply for bounties in the Stellar Ecosystem. This will be easy to incorporate to other projects and it is part of our DAO tooling initiative.
+
+## Next Steps
+
+- [x] #2
+- [x] Add Freighter Wallet Integration
+- [x] #6
+- [] #7
+- [] Implement Rust contract
 
 ## Getting Started
+
+This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 First, run the development server:
 
