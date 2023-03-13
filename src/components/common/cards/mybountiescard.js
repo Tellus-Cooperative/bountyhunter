@@ -24,7 +24,7 @@ console.log(data, "I am data")
         </div>
         <div className="mt-3">
           <p className="robotosimple text-[12px] lg:text-sm">
-            {data.bounty_description.substring(0,220)}
+            {data?.bounty_description?.substring(0,220)}
           </p>
 
           <div className="mt-4">

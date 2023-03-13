@@ -27,7 +27,7 @@ const Cards = ({data,callBack}) => {
         </div>
         <div className="mt-3">
           <p className="robotosimple text-[12px] lg:text-sm">
-          {data.bounty_description.substring(0,260)}
+          {data?.bounty_description?.substring(0,260)}
           </p>
 
           <div className="mt-4">
