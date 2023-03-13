@@ -6,11 +6,16 @@ Our goal is to create an open source bounty hunting application that allows user
 
 ## Next Steps
 
-- [x] #2
 - [x] Add Freighter Wallet Integration
-- [x] #6
-- [ ] #7
+- [x] New Bounties Page
+- [x] Apply Form
+- [x] Reviewer Form 
+- [ ] i18n English/Spanish https://github.com/Tellus-Cooperative/bountyhunter/issues/7
 - [ ] Implement Rust contract
+
+## High-level Flow Overview
+
+![flows](https://file.notion.so/f/s/fa1861e1-1e74-48d7-8dd5-5cb35557d270/bountyflows.jpg?id=e34d3768-cc52-4f6f-a404-d366bb84ab38&table=block&spaceId=b1beb753-ca01-4fff-a2bc-25d8e01b43a8&expirationTimestamp=1678757328423&signature=b6oVMwmGYrHNLiNal8n15MpW74NLvlbCwU5i-W87ZCo&downloadName=bountyflows.jpg)
 
 ## Getting Started
 
