@@ -9,8 +9,8 @@ Our goal is to create an open source bounty hunting application that allows user
 - [x] #2
 - [x] Add Freighter Wallet Integration
 - [x] #6
-- [] #7
-- [] Implement Rust contract
+- [ ] #7
+- [ ] Implement Rust contract
 
 ## Getting Started
 
