@@ -72,6 +72,13 @@ const Header = () => {
                 </div>
               </div>
 
+              <div className="flex items-center mr-14">
+                <div className="english flex">
+                  <img src="/World.png" alt="" />
+                  <h1 className="text-xl">EN </h1>
+                </div>
+              </div>
+
               <div className="buttons flex space-x-4 items-center">
                 <button
                   disabled={!publicKey}

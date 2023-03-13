@@ -14,3 +14,14 @@ query MyQuery {
     }
   }
 `
+
+
+export const allSubmissions = gql`
+query MyQuery ($public_address: String!) {
+    submissions(where: {sub_public_address: {_eq: $public_address}}){
+     id
+     bounty_id
+     
+    }
+  }
+`   

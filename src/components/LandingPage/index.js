@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import Cards from "../common/cards";
 import Filterbutton from "../common/filters";
 import cardSide from "./cards.json";
-import Link from "next/link";
+import { useRouter } from 'next/router'
 import { useQuery } from "@apollo/client";
-import { allBounties } from "./query";
+import { allBounties, allSubmissions } from "./query";
 
 const filterMenu = [
   {
@@ -26,26 +26,33 @@ const filterMenu = [
 ];
 
 const LandingPage = () => {
-  const [publicKey, setPublicKey] = useState(false);
+  const [publicKey, setPublicKey] = useState("");
   const [cardData, setCardData] = useState(cardSide.card[0]);
   const [mobView, setMobView] = useState(false);
+  const router = useRouter()
 
   const { loading, data, error } = useQuery(allBounties);
 
+  const { data: submissionData, error:submissionError } = useQuery(allSubmissions, {
+    variables: { public_address: publicKey },
+  });
 
   useEffect(() => {
-    console.log(window.freighterApi, "Windows");
+   
     getKey();
 
-    if(data){
-      console.log(data.all_bounties, "I am buounties");
-      setCardData(data.all_bounties[0])
+    if (data) {
+      setCardData(data.all_bounties[0]);
     }
-  }, [data]);
+
+    if(submissionData){
+      console.log(submissionData, "Submission")
+    }
+  }, [data, submissionData]);
 
   const getKey = async () => {
     if (window?.freighterApi?.getPublicKey()) {
-      setPublicKey(true);
+      setPublicKey(await window.freighterApi.getPublicKey());
     }
   };
 
@@ -54,10 +61,17 @@ const LandingPage = () => {
     setMobView(true);
   };
 
+  const applyNow = (bountyId, bountyAddress) => {
+    router.push({
+      pathname:'/applynow',
+      query: { id: bountyId, bountyAddress: bountyAddress}
+  })
+
+  }
   return (
     <>
       <section id="landingpage h-screen overflow-hidden">
-      <div className=" w-11/12 lg:w-11/12 mx-auto mt-10">
+        <div className=" w-11/12 lg:w-11/12 mx-auto mt-10">
           <div className="flex w-[48%] justify-between h-[4vh]">
             {filterMenu.map((item, index) => (
               <Filterbutton key={index} data={item} />
@@ -70,7 +84,7 @@ const LandingPage = () => {
                   mobView ? "hidden lg:block" : " "
                 } overflow-y-auto h-[76vh] mt-2 lg:mt-0 lg:h-[72vh] rounded-xl shadow-xl`}
               >
-                  {data?.all_bounties.map((item, index) => (
+                {data?.all_bounties.map((item, index) => (
                   <Cards data={item} callBack={pullData} />
                 ))}
 
@@ -112,17 +126,18 @@ const LandingPage = () => {
                 <button className="bg-lightgrey w-40 h-10 flex items-center justify-center rounded-2xl">
                   <p className="text-sm">{cardData?.payment_amount} XLM</p>
                 </button>
-
                 <button
-                  disabled={!publicKey}
+                onClick={()=>applyNow(cardData.id,cardData.public_address)}
+                  disabled={
+                    !publicKey || publicKey === cardData?.public_address
+                  }
                   className={`${
-                    publicKey ? "bg-lightPink" : "bg-darkColor"
+                    publicKey && publicKey === cardData?.public_address ? "bg-darkColor" : "bg-lightPink"
                   } w-52 h-16 rounded-xl shadow-2xl
-                w-40 h-12 flex items-center justify-center rounded-2xl shadow-xl`}
+                  w-40 h-12 flex items-center justify-center rounded-2xl shadow-xl`}
                 >
-                  <Link href="/applynow">
-                    <h1 className="text-sm">Apply</h1>
-                  </Link>
+        
+                    <h1 className="text-sm">Apply Now</h1>
                 </button>
               </div>
 
