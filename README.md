@@ -15,7 +15,7 @@ Our goal is to create an open source bounty hunting application that allows user
 
 ## High-level Flow Overview
 
-![flows](https://file.notion.so/f/s/fa1861e1-1e74-48d7-8dd5-5cb35557d270/bountyflows.jpg?id=e34d3768-cc52-4f6f-a404-d366bb84ab38&table=block&spaceId=b1beb753-ca01-4fff-a2bc-25d8e01b43a8&expirationTimestamp=1678757328423&signature=b6oVMwmGYrHNLiNal8n15MpW74NLvlbCwU5i-W87ZCo&downloadName=bountyflows.jpg)
+![flows](https://github.com/Tellus-Cooperative/bountyhunter/blob/main/public/bountyflows.jpeg)
 
 ## Getting Started
 
