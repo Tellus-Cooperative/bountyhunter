@@ -2,24 +2,41 @@ import React, { useState, useEffect } from "react";
 import Cards from "../common/cards";
 import cardSide from "../LandingPage/cards.json";
 import Link from "next/link";
+import { useQuery } from "@apollo/client";
+import { allBounties } from "./query";
+import MyBountiesCard from "../common/cards/mybountiescard";
 
 const BountyReview = () => {
-  const [publicKey, setPublicKey] = useState(false);
+  const [publicKey, setPublicKey] = useState('');
   const [cardData, setCardData] = useState(cardSide.card[0]);
   const [mobView, setMobView] = useState(false);
+
+  const { loading, data, error } = useQuery(allBounties, {
+    variables: { public_address: publicKey },
+  });
+
+  const bountyId = data?.submissions;
+
+  console.log(bountyId, "bounty id")
 
   useEffect(() => {
     console.log(window.freighterApi, "Windows");
     getKey();
-  }, []);
+
+    // if (data) {
+    //   setCardData(data.all_bounties[0]);
+    // }
+
+  }, [data]);
 
   const getKey = async () => {
     if (window?.freighterApi?.getPublicKey()) {
-      setPublicKey(true);
+      setPublicKey(await window.freighterApi.getPublicKey());
     }
   };
 
   const pullData = (data) => {
+    console.log(data, "I am datadsfdsfdfdsf")
     setCardData(data);
     setMobView(true);
   };
@@ -30,11 +47,17 @@ const BountyReview = () => {
         <div className="grid grid-cols-2 gap-4">
           <div className="mybounty shadow-xl bg-cardscolor rounded-xl py-10 px-5 lg:h-[80vh] h-[76vh] overflow-y-auto">
             <div className="pt-2">
-              <h1 className="text-3xl text-dark font-bold">My Bounties</h1>
+              <h1 className="text-3xl text-dark font-bold">Bounty Review</h1>
 
-              {cardSide.card.map((item, index) => (
-                <Cards data={item} callBack={pullData} />
-              ))}
+              {bountyId?.map((item, index) => (
+                  <MyBountiesCard data={item} callBack={pullData} publicKey={publicKey}/>
+                ))}
+
+                <div className="flex justify-center mt-5">
+                  {bountyId?.length == 0 && (
+                    <h1 className="text-2xl">No Bounties Found</h1>
+                  )}
+                </div>
             </div>
           </div>
 

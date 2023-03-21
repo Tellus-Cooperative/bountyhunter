@@ -1,6 +1,6 @@
 import React from "react";
 
-const Cards = ({data,callBack}) => {
+const Cards = ({data,callBack,publicKey}) => {
 
 
   return (
@@ -8,7 +8,7 @@ const Cards = ({data,callBack}) => {
       <div className="cardContainer rounded-2xl mt-4 bg-cardscolor py-6 px-6 lg:px-10 shadow-xl">
         <div className="flex">
           <div className="hidden lg:block w-2/12">
-            <img src="/image.png" alt="" />
+            <img src={`https://id.lobstr.co/${publicKey}.png`} alt="" className="w-20" />
           </div>
           <div className="w-full lg:w-10/12">
             <div className="flex flex-col lg:flex-row justify-between">

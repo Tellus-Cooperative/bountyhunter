@@ -85,7 +85,7 @@ const LandingPage = () => {
                 } overflow-y-auto h-[76vh] mt-2 lg:mt-0 lg:h-[72vh] rounded-xl shadow-xl`}
               >
                 {data?.all_bounties.map((item, index) => (
-                  <Cards data={item} callBack={pullData} />
+                  <Cards data={item} callBack={pullData} publicKey={publicKey}/>
                 ))}
 
                 <div className="flex justify-center mt-5">

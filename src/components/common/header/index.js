@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useSorobanReact } from "@soroban-react/core";
@@ -12,16 +12,15 @@ const Header = () => {
   const sorobanContext = useSorobanReact();
 
   useEffect(() => {
-    console.log(window.freighterApi, "Windows")
+    console.log(window.freighterApi, "Windows");
     getKey();
-  },[]);
+  }, []);
 
   const getKey = async () => {
     if (window?.freighterApi?.getPublicKey()) {
       setPublicKey(true);
     }
   };
-
 
   return (
     <Disclosure as="nav">
@@ -56,7 +55,7 @@ const Header = () => {
                 <div className="menu">
                   <ul className="flex lg:space-x-16 mt-5">
                     <li>
-                      <Link href="#">Home</Link>
+                      <Link href="/">Home</Link>
                     </li>
                     <li>
                       {" "}
@@ -86,13 +85,48 @@ const Header = () => {
                     publicKey ? "bg-lightPink" : "bg-darkColor"
                   } w-52 h-16 rounded-xl shadow-2xl`}
                 >
-                  <Link href="/newbounty" className="text-white font-semibold">New Bounty</Link>
+                  <Link href="/newbounty" className="text-white font-semibold">
+                    New Bounty
+                  </Link>
                 </button>
 
                 {publicKey && (
-                  <button className="bg-lightblue w-52 h-16 rounded-xl shadow-2xl">
-                    <WalletData sorobanContext={sorobanContext} />
-                  </button>
+                  <Menu as="div">
+                    <Menu.Button className="bg-lightblue w-52 h-16 rounded-xl shadow-2xl">
+                      <WalletData sorobanContext={sorobanContext} />
+                    </Menu.Button>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-100"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="absolute z-10 mt-2 w-44 r origin-top-right rounded-2xl bg-lightblue shadow-lg">
+                        <div className="py-1">
+                          <Menu.Item>
+                            <Link
+                              href="/newbounty"
+                              className=" text-gray-900 text-gray-700 block px-4 py-2 text-sm"
+                            >
+                              My Bounties
+                            </Link>
+                          </Menu.Item>
+
+                          <Menu.Item>
+                            <Link
+                              href="/applynow"
+                              className=" text-gray-900 text-gray-700 block px-4 py-2 text-sm"
+                            >
+                              My Submissions
+                            </Link>
+                          </Menu.Item>
+                        </div>
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
                 )}
 
                 {!publicKey && (

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import cardSide from "../LandingPage/cards.json";
-import MyBountiesCard from "../common/cards/mybountiescard";
+import MyBountiesCard from "../common/cards/bounties";
 import { submitBounty, allBounties } from "./query";
 import { useMutation, useQuery } from "@apollo/client";
 
@@ -14,6 +14,7 @@ const NewBounty = () => {
   const [bountyDifficulty, setBountyDifficulty] = useState("");
   const [bountyDescription, setBountyDescription] = useState("");
   const [bountyData, setBountyData] = useState("");
+  const [btnActive, SetBtnActive] = useState(false);
 
   const [
     submitBountyNow,
@@ -23,6 +24,8 @@ const NewBounty = () => {
       { query: allBounties, variables: { public_address: publicKey } },
     ],
   });
+
+  
   const { loading, data, error } = useQuery(allBounties, {
     variables: { public_address: publicKey },
   });
@@ -53,7 +56,11 @@ const NewBounty = () => {
       console.log(data, "I am data");
       setBountyData(data?.all_bounties);
     }
-  }, [bountySubmitError, data]);
+
+    if(bountyName && organizationName && paymentAmount && bountyType && bountyDifficulty && bountyDescription){
+      SetBtnActive(true)
+    }
+  }, [bountySubmitError, data,bountyName,organizationName,paymentAmount, bountyType, bountyDifficulty, bountyDescription]);
 
   const getKey = async () => {
     if (window?.freighterApi?.getPublicKey()) {
@@ -71,9 +78,10 @@ const NewBounty = () => {
                 <div className="top flex justify-between">
                   <h1 className="text-3xl text-dark font-bold">New Bounty</h1>
                   <button
-                    className={`bg-darkColor w-52 h-16 rounded-xl shadow-2xl`}
+                  disabled={!btnActive}
+                    className={`${btnActive? 'bg-lightblue': 'bg-darkColor'} w-52 h-16 rounded-xl shadow-2xl`}
                   >
-                    <a className="text-white font-semibold">Submit</a>
+                    <p className="text-white font-semibold">Submit</p>
                   </button>
                 </div>
 
@@ -176,7 +184,7 @@ const NewBounty = () => {
                 <h1 className="text-3xl text-dark font-bold">My Bounties</h1>
 
                 {data?.all_bounties.map((item, index) => (
-                  <MyBountiesCard data={item} />
+                  <MyBountiesCard data={item} publicKey={publicKey}/>
                 ))}
 
                 <div className="flex justify-center mt-5">
