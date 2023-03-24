@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import cardSide from "../LandingPage/cards.json";
 import { useRouter } from "next/router";
 import { useMutation, useQuery } from "@apollo/client";
-import { submitSubmission, allBounties, newBounties } from "./query";
+import { submitSubmission, allBounties, updateBounty } from "./query";
 import MyBountiesCard from "../common/cards/mybountiescard";
+import { useSorobanReact } from "@soroban-react/core";
 
 const ApplyNow = () => {
   const [publicKey, setPublicKey] = useState("");
@@ -14,18 +15,24 @@ const ApplyNow = () => {
   const [btnActive, SetBtnActive] = useState(false);
   const router = useRouter();
 
+  const sorobanContext = useSorobanReact();
   const { id, bountyAddress } = router.query;
+  const { address } = sorobanContext || {};
 
   const { loading, data, error } = useQuery(allBounties, {
     variables: { public_address: publicKey },
   });
 
-  const bountyId = data?.submissions;
+  const [submitSubmissionNow] = useMutation(submitSubmission, {
+    refetchQueries: [
+      { query: allBounties, variables: { public_address: publicKey } },
+    ],
+  });
 
-  const [
-    submitSubmissionNow,
-    { data: bountySubmitData, error: bountySubmitError },
-  ] = useMutation(submitSubmission);
+  const [updateBountyNow, { data: bountyUpdateData, error: bountyDataError }] =
+    useMutation(updateBounty);
+
+  const bountyId = data?.submissions;
 
   const pullData = (data) => {
     setCardData(data);
@@ -33,21 +40,33 @@ const ApplyNow = () => {
   };
 
   useEffect(() => {
-    getKey();
+    if (address) {
+      getKey(address);
+    }
 
     if (submissionTitle && submissionLink && submissionDesc) {
       SetBtnActive(true);
-    }
-  }, [data]);
 
-  const getKey = async () => {
-    if (window?.freighterApi?.getPublicKey()) {
-      setPublicKey(await window.freighterApi.getPublicKey());
+      if ((bountyUpdateData, bountyDataError)) {
+        console.log(bountyUpdateData, bountyDataError);
+      }
     }
+  }, [data, bountyUpdateData, bountyDataError, address]);
+
+  const getKey = async (address) => {
+
+      setPublicKey(address);
+    
   };
 
   const handleForm = (e) => {
     e.preventDefault();
+
+    updateBountyNow({
+      variables: {
+        id: id,
+      },
+    });
 
     submitSubmissionNow({
       variables: {
@@ -59,6 +78,8 @@ const ApplyNow = () => {
         submission_description: submissionDesc,
       },
     });
+
+    alert("Submissoion Submitted");
   };
 
   return (
@@ -146,7 +167,7 @@ const ApplyNow = () => {
                 <h1 className="text-3xl text-dark font-bold">My Submission</h1>
 
                 {bountyId?.map((item, index) => (
-                  <MyBountiesCard data={item} publicKey={publicKey}/>
+                  <MyBountiesCard data={item} publicKey={publicKey} />
                 ))}
 
                 <div className="flex justify-center mt-5">

@@ -15,7 +15,8 @@ module.exports = {
         pinkColor: "#FF5F8A",
         lightPink: "#FF6392",
         greenColor: "#71C666",
-        blueColor: "#2E4153"
+        blueColor: "#2E4153",
+        lightOrange: "#E78B74"
         
       }
     },

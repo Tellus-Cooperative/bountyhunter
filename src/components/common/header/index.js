@@ -11,13 +11,17 @@ const Header = () => {
   const [publicKey, setPublicKey] = useState(false);
   const sorobanContext = useSorobanReact();
 
+  const { address } = sorobanContext || {};
+
   useEffect(() => {
-    console.log(window.freighterApi, "Windows");
-    getKey();
-  }, []);
+    if (address) {
+      getKey();
+    }
+  }, [address]);
 
   const getKey = async () => {
-    if (window?.freighterApi?.getPublicKey()) {
+    if (await window?.freighterApi?.getPublicKey()) {
+      console.log("here");
       setPublicKey(true);
     }
   };
@@ -93,7 +97,9 @@ const Header = () => {
                 {publicKey && (
                   <Menu as="div">
                     <Menu.Button className="bg-lightblue w-52 h-16 rounded-xl shadow-2xl">
-                      <WalletData sorobanContext={sorobanContext} />
+                      <a className="text-white font-semibold">
+                        <WalletData sorobanContext={sorobanContext} />
+                      </a>
                     </Menu.Button>
                     <Transition
                       as={Fragment}
@@ -105,11 +111,11 @@ const Header = () => {
                       leaveTo="transform opacity-0 scale-95"
                     >
                       <Menu.Items className="absolute z-10 mt-2 w-44 r origin-top-right rounded-2xl bg-lightblue shadow-lg">
-                        <div className="py-1">
+                        <div className="py-1 text-white">
                           <Menu.Item>
                             <Link
                               href="/newbounty"
-                              className=" text-gray-900 text-gray-700 block px-4 py-2 text-sm"
+                              className=" text-white text-gray-700 block px-4 py-2 text-sm"
                             >
                               My Bounties
                             </Link>
@@ -118,9 +124,18 @@ const Header = () => {
                           <Menu.Item>
                             <Link
                               href="/applynow"
-                              className=" text-gray-900 text-gray-700 block px-4 py-2 text-sm"
+                              className=" text-white text-gray-700 block px-4 py-2 text-sm"
                             >
                               My Submissions
+                            </Link>
+                          </Menu.Item>
+
+                          <Menu.Item>
+                            <Link
+                              href="/bountyreview"
+                              className=" text-white text-gray-700 block px-4 py-2 text-sm"
+                            >
+                              Review Submissions
                             </Link>
                           </Menu.Item>
                         </div>
@@ -130,11 +145,13 @@ const Header = () => {
                 )}
 
                 {!publicKey && (
-                  <button className="bg-lightblue w-52 h-16 rounded-xl shadow-2xl">
-                    <ConnectButton
-                      label="Connect  Wallet"
-                      sorobanContext={sorobanContext}
-                    />
+                  <button className="bg-blueColor w-52 h-16 rounded-xl shadow-2xl text-white">
+                    <a className="text-white font-semibold">
+                      <ConnectButton
+                        label="Connect Wallet"
+                        sorobanContext={sorobanContext}
+                      />
+                    </a>
                   </button>
                 )}
               </div>

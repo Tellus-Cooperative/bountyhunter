@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import cardSide from "../LandingPage/cards.json";
 import MyBountiesCard from "../common/cards/bounties";
 import { submitBounty, allBounties } from "./query";
 import { useMutation, useQuery } from "@apollo/client";
-
+import { useSorobanReact } from "@soroban-react/core";
+import { useRouter } from 'next/router'
 
 const NewBounty = () => {
+  const router = useRouter()
   const [publicKey, setPublicKey] = useState("");
   const [bountyName, setBountyName] = useState("");
   const [organizationName, setOrganizationName] = useState("");
@@ -13,8 +14,13 @@ const NewBounty = () => {
   const [bountyType, setBountyType] = useState("");
   const [bountyDifficulty, setBountyDifficulty] = useState("");
   const [bountyDescription, setBountyDescription] = useState("");
+  const [bountyTopic, setBountyTopic] = useState("");
   const [bountyData, setBountyData] = useState("");
   const [btnActive, SetBtnActive] = useState(false);
+
+  const sorobanContext = useSorobanReact();
+
+  const {address}= sorobanContext || {}
 
   const [
     submitBountyNow,
@@ -25,13 +31,12 @@ const NewBounty = () => {
     ],
   });
 
-  
   const { loading, data, error } = useQuery(allBounties, {
     variables: { public_address: publicKey },
   });
 
   const handleNewBounty = (e) => {
-    console.log(bountyType);
+    
     e.preventDefault();
     submitBountyNow({
       variables: {
@@ -44,10 +49,13 @@ const NewBounty = () => {
         public_address: publicKey,
       },
     });
+    alert('New Bounty Added')
   };
 
   useEffect(() => {
-    getKey();
+    if(address){
+      getKey(address)
+    }
     if (bountySubmitError) {
       console.log(error, "My error");
     }
@@ -57,16 +65,41 @@ const NewBounty = () => {
       setBountyData(data?.all_bounties);
     }
 
-    if(bountyName && organizationName && paymentAmount && bountyType && bountyDifficulty && bountyDescription){
-      SetBtnActive(true)
+    if (
+      bountyName &&
+      organizationName &&
+      paymentAmount &&
+      bountyType &&
+      bountyDifficulty &&
+      bountyDescription &&
+      bountyTopic
+    ) {
+      SetBtnActive(true);
     }
-  }, [bountySubmitError, data,bountyName,organizationName,paymentAmount, bountyType, bountyDifficulty, bountyDescription]);
 
-  const getKey = async () => {
-    if (window?.freighterApi?.getPublicKey()) {
-      setPublicKey(await window.freighterApi.getPublicKey());
+    else {
+      SetBtnActive(false)
     }
+  }, [
+    bountySubmitError,
+    data,
+    bountyName,
+    organizationName,
+    paymentAmount,
+    bountyType,
+    bountyDifficulty,
+    bountyDescription,
+    address
+  ]);
+
+  const getKey = async (address) => {
+      setPublicKey(address);
+  
   };
+
+  const pullData = () => {
+   router.push('/bountyreview')
+  }
 
   return (
     <>
@@ -78,8 +111,10 @@ const NewBounty = () => {
                 <div className="top flex justify-between">
                   <h1 className="text-3xl text-dark font-bold">New Bounty</h1>
                   <button
-                  disabled={!btnActive}
-                    className={`${btnActive? 'bg-lightblue': 'bg-darkColor'} w-52 h-16 rounded-xl shadow-2xl`}
+                    disabled={!btnActive}
+                    className={`${
+                      btnActive ? "bg-lightblue" : "bg-darkColor"
+                    } w-52 h-16 rounded-xl shadow-2xl`}
                   >
                     <p className="text-white font-semibold">Submit</p>
                   </button>
@@ -131,33 +166,71 @@ const NewBounty = () => {
                       />
                     </label>
                   </div>
-                  <div className="mt-4">
-                    <label class="block">
-                      <span class="block text-sm font-medium text-slate-700">
-                        *Bounty Type
-                      </span>
-                      <input
-                        type="text"
-                        onChange={(e) => setBountyType(e.target.value)}
-                        required
-                        class="mt-1 block w-full px-3 py-3 border border-slate-300 rounded-xl text-sm shadow-sm placeholder-slate-400
-                    focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-lightgrey"
-                      />
-                    </label>
-                  </div>
-                  <div className="mt-4">
-                    <label class="block">
-                      <span class="block text-sm font-medium text-slate-700">
-                        *Bounty Difficulty
-                      </span>
-                      <input
-                        type="text"
-                        onChange={(e) => setBountyDifficulty(e.target.value)}
-                        required
-                        class="mt-1 block w-full px-3 py-3 border border-slate-300 rounded-xl text-sm shadow-sm placeholder-slate-400
-                    focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-lightgrey"
-                      />
-                    </label>
+
+                  <div className="grid grid-cols-3 gap-3 my-1">
+                    <div className="mt-4">
+                      <label class="block">
+                        <span class="block text-sm font-medium text-slate-700">
+                          *Bounty Type
+                        </span>
+                        <select
+                          id="cars"
+                          name="cars"
+                          class="mt-1 block w-full px-3 py-3 border border-slate-300 rounded-xl text-sm shadow-sm placeholder-slate-400
+                          focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-lightgrey"
+                          onChange={(e) => setBountyType(e.target.value)}
+                        >
+                           <option value=""></option>
+                          <option value="Cooperative">Cooperative</option>
+                          <option value="Competitive">Competitive</option>
+                          <option value="Hackathon">Hackathon</option>
+                        </select>
+                      </label>
+                    </div>
+
+                    <div className="mt-4">
+                      <label class="block">
+                        <span class="block text-sm font-medium text-slate-700">
+                          *Bounty Difficulty
+                        </span>
+                        <select
+                          id="cars"
+                          name="cars"
+                          class="mt-1 block w-full px-3 py-3 border border-slate-300 rounded-xl text-sm shadow-sm placeholder-slate-400
+                          focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-lightgrey"
+                          onChange={(e) => setBountyDifficulty(e.target.value)}
+                        >
+                             <option value=""></option>
+                          <option value="Beginner">Beginner</option>
+                          <option value="Intermediate">Intermediate</option>
+                          <option value="Advanced">Advanced</option>
+                        </select>
+                      </label>
+                    </div>
+
+                    <div className="mt-4">
+                      <label class="block">
+                        <span class="block text-sm font-medium text-slate-700">
+                          *Bounty Topic
+                        </span>
+                        <select
+                          id="cars"
+                          name="cars"
+                          class="mt-1 block w-full px-3 py-3 border border-slate-300 rounded-xl text-sm shadow-sm placeholder-slate-400
+                          focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 bg-lightgrey"
+                          onChange={(e) => setBountyTopic(e.target.value)}
+                        >
+                             <option value=""></option>
+                          <option value="Smart Contracts">
+                            Smart Contracts
+                          </option>
+                          <option value="Vanilla Stellar">
+                            Vanilla Stellar
+                          </option>
+                          <option value="Design">Design</option>
+                        </select>
+                      </label>
+                    </div>
                   </div>
 
                   <div className="mt-4">
@@ -167,7 +240,7 @@ const NewBounty = () => {
                       </span>
                       <textarea
                         onChange={(e) => setBountyDescription(e.target.value)}
-                        rows="5"
+                        rows="8"
                         cols="50"
                         required
                         class="mt-1 block w-full px-3 py-3 border border-slate-300 rounded-xl text-sm shadow-sm placeholder-slate-400
@@ -184,7 +257,7 @@ const NewBounty = () => {
                 <h1 className="text-3xl text-dark font-bold">My Bounties</h1>
 
                 {data?.all_bounties.map((item, index) => (
-                  <MyBountiesCard data={item} publicKey={publicKey}/>
+                  <MyBountiesCard data={item} publicKey={publicKey} callBack={pullData}/>
                 ))}
 
                 <div className="flex justify-center mt-5">

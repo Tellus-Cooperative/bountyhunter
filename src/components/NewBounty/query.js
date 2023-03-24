@@ -19,6 +19,11 @@ query MyQuery ($public_address: String!) {
        bounty_difficulty
        public_address
        id
+       Status
+       bounty_availability
+       bounty_topic
     }
   }
 `
+
+

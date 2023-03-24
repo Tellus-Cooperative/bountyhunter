@@ -2,43 +2,86 @@ import React, { useState, useEffect } from "react";
 import Cards from "../common/cards";
 import cardSide from "../LandingPage/cards.json";
 import Link from "next/link";
-import { useQuery } from "@apollo/client";
-import { allBounties } from "./query";
-import MyBountiesCard from "../common/cards/mybountiescard";
+import { useQuery, useMutation } from "@apollo/client";
+import {
+  allBounties,
+  fetchSubmittedData,
+  updateBounty,
+  updateBountyReject,
+  MyAllBounties,
+} from "./query";
+import MyBountiesCard from "../common/cards/bounties";
+import { useSorobanReact } from "@soroban-react/core";
 
 const BountyReview = () => {
-  const [publicKey, setPublicKey] = useState('');
+  const [publicKey, setPublicKey] = useState("");
   const [cardData, setCardData] = useState(cardSide.card[0]);
   const [mobView, setMobView] = useState(false);
+  const [bountyDeclaredId, setBountyDeclaredId] = useState("");
+  const sorobanContext = useSorobanReact();
 
-  const { loading, data, error } = useQuery(allBounties, {
+  const { address } = sorobanContext || {};
+
+  const {  data } = useQuery(MyAllBounties, {
     variables: { public_address: publicKey },
   });
 
+  const {
+    data: bountySubmittedData,
+    error: bountyError,
+    refetch,
+  } = useQuery(fetchSubmittedData, {
+    variables: {
+      bounty_id: bountyDeclaredId,
+    },
+  });
+
+  const [approveSetBounty, { data: approveBountyData }] =
+    useMutation(updateBounty);
+
+  const [rejectSetBounty, { data: rejectBountyData }] =
+    useMutation(updateBountyReject);
+
   const bountyId = data?.submissions;
 
-  console.log(bountyId, "bounty id")
-
   useEffect(() => {
-    console.log(window.freighterApi, "Windows");
-    getKey();
-
-    // if (data) {
-    //   setCardData(data.all_bounties[0]);
-    // }
-
-  }, [data]);
-
-  const getKey = async () => {
-    if (window?.freighterApi?.getPublicKey()) {
-      setPublicKey(await window.freighterApi.getPublicKey());
+    if (address) {
+      getKey(address);
     }
+
+    if (data) {
+      console.log("data", data);
+    }
+  }, [data, address]);
+
+  const getKey = async (address) => {
+    setPublicKey(address);
   };
 
   const pullData = (data) => {
-    console.log(data, "I am datadsfdsfdfdsf")
+    setBountyDeclaredId(data.id);
+    refetch(bountyDeclaredId);
     setCardData(data);
     setMobView(true);
+  };
+
+  const approveBounty = (id) => {
+    approveSetBounty({
+      variables: {
+        id,
+      },
+    });
+    alert("Bounty Approved");
+  };
+
+  const rejectBounty = (id) => {
+    rejectSetBounty({
+      variables: {
+        id,
+      },
+    });
+
+    alert("Bounty Rejected");
   };
 
   return (
@@ -49,15 +92,19 @@ const BountyReview = () => {
             <div className="pt-2">
               <h1 className="text-3xl text-dark font-bold">Bounty Review</h1>
 
-              {bountyId?.map((item, index) => (
-                  <MyBountiesCard data={item} callBack={pullData} publicKey={publicKey}/>
-                ))}
+              {data?.all_bounties.map((item, index) => (
+                <MyBountiesCard
+                  data={item}
+                  publicKey={publicKey}
+                  callBack={pullData}
+                />
+              ))}
 
-                <div className="flex justify-center mt-5">
-                  {bountyId?.length == 0 && (
-                    <h1 className="text-2xl">No Bounties Found</h1>
-                  )}
-                </div>
+              <div className="flex justify-center mt-5">
+                {bountyId?.length == 0 && (
+                  <h1 className="text-2xl">No Bounties Found</h1>
+                )}
+              </div>
             </div>
           </div>
 
@@ -67,76 +114,101 @@ const BountyReview = () => {
               className="text-3xl lg:hidden fal fa-long-arrow-left"
             ></i>
 
-            <h1 className="text-3xl text-dark font-bold">New Bounty</h1>
+            <h1 className="text-3xl text-dark font-bold">Bounty Review</h1>
 
-            <div className="flex justify-between items-center">
-              <div>
-                <h1 className="lg:pt-10 text-base lg:text-xl">
-                  {cardData?.subtitle}
-                </h1>
-                <h1 className="text-black mt-1 lg:mt-3 text-xl lg:text-3xl font-medium">
-                  {cardData?.title}
-                </h1>
+            {bountyDeclaredId && (
+              <>
+                <div className="flex justify-between items-center">
+                  <div>
+                    <h1 className="lg:pt-10 text-base lg:text-xl">
+                      {cardData?.organization_name}
+                    </h1>
+                    <h1 className="text-black mt-1 lg:mt-3 text-xl lg:text-3xl font-medium">
+                      {cardData?.bounty_name}
+                    </h1>
+                  </div>
+                  <button
+                    disabled={!publicKey}
+                    className={`${
+                      publicKey ? "bg-lightblue" : "bg-darkColor"
+                    } w-44 h-16 rounded-xl shadow-2xl
+                w-40 h-12 text-white flex items-center justify-center rounded-2xl shadow-xl`}
+                  >
+                    <Link href="/applynow">
+                      <p className="text-sm">IN ESCROW</p>
+                    </Link>
+                  </button>
+                </div>
+
+                {!bountySubmittedData?.submissions.length == 0 && (
+                  <>
+                  <div className="mt-14 overflow-y-auto h-[50%]">
+                    <h1 className="text-sm">Submission Title:</h1>
+                    <p className="mt-1">
+                      {bountySubmittedData?.submissions[0]?.submission_title}
+                    </p>
+
+                    <h1 className="text-sm mt-9">Submission Link:</h1>
+                    <p className="mt-1">
+                      {bountySubmittedData?.submissions[0]?.submission_link}
+                    </p>
+
+                    <h1 className="text-sm mt-9">Submission Description:</h1>
+                    <p className="mt-1">
+                      {
+                        bountySubmittedData?.submissions[0]
+                          ?.submission_description
+                      }
+                    </p>
+                  </div>
+              
+
+
+                <div className="buttons flex justify-around mt-5">
+                  <button
+                    onClick={() => approveBounty(cardData.id)}
+                    disabled={!publicKey}
+                    className={`${
+                      publicKey ? "bg-greenColor" : "bg-darkColor"
+                    } w-44 h-16 rounded-xl shadow-2xl
+                w-40 h-12 text-white flex items-center justify-center rounded-2xl shadow-xl`}
+                  >
+                    <h1 className="robotosimple text-xl font-regular ">
+                      APPROVE
+                    </h1>
+                  </button>
+
+                  <button
+                    onClick={() => rejectBounty(cardData.id)}
+                    disabled={!publicKey}
+                    className={`${
+                      publicKey ? "bg-red" : "bg-darkColor"
+                    } w-44 h-16 rounded-xl shadow-2xl
+                w-40 h-12 text-white flex items-center justify-center rounded-2xl shadow-xl`}
+                  >
+                    <h1 className="robotosimple text-xl font-regular ">
+                      REJECT
+                    </h1>
+                  </button>
+                </div>
+                </>
+  )}
+
+                {bountySubmittedData?.submissions.length == 0 && (
+                  <div className="mt-20 flex justify-center">
+                    <h2 className="text-2xl">
+                      No one has submission against this bounty
+                    </h2>
+                  </div>
+                )}
+              </>
+            )}
+
+            {!bountyDeclaredId && (
+              <div className="flex justify-center mt-10">
+                <h1 className="text-2xl">Please Select a bounty first</h1>
               </div>
-              <button
-                disabled={!publicKey}
-                className={`${
-                  publicKey ? "bg-lightblue" : "bg-darkColor"
-                } w-44 h-16 rounded-xl shadow-2xl
-                w-40 h-12 text-white flex items-center justify-center rounded-2xl shadow-xl`}
-              >
-                <Link href="/applynow">
-                  <p className="text-sm">IN ESCROW</p>
-                </Link>
-              </button>
-            </div>
-
-            <div className="mt-14 overflow-y-auto h-[50%]">
-              <h1 className="text-sm">Submission:</h1>
-              <p className="robotosimple mt-5 bg-lightgrey rounded-xl px-4 py-5">
-                As a bounty hunter for the Soroban Contract Writing in Rust, you
-                will be responsible for thoroughly testing our platform and
-                identifying any potential security vulnerabilities or bugs. You
-                will be tasked with conducting comprehensive penetration testing
-                and code review to ensure that our platform is secure, reliable,
-                and efficient. Successful candidates will have a strong
-                understanding of Rust development, as well as experience working
-                with blockchain technology and smart contract writing. You
-                should be comfortable working with cryptographic algorithms, as
-                well as developing and testing secure, reliable, and efficient.
-                Successful candidates will have a strong understanding of Rust
-                development, as well as experience working with blockchain
-                technology and smart contract writing. You should be comfortable
-                working with cryptographic algorithms, as well as developing and
-                testing secure, reliable, and efficient.
-              </p>
-            </div>
-
-            <div className="buttons flex justify-around mt-5">
-              <button
-                disabled={!publicKey}
-                className={`${
-                  publicKey ? "bg-greenColor" : "bg-darkColor"
-                } w-44 h-16 rounded-xl shadow-2xl
-                w-40 h-12 text-white flex items-center justify-center rounded-2xl shadow-xl`}
-              >
-                <Link href="/applynow">
-                <h1 className="robotosimple text-xl font-regular ">APPROVE</h1>
-                </Link>
-              </button>
-
-              <button
-                disabled={!publicKey}
-                className={`${
-                  publicKey ? "bg-red" : "bg-darkColor"
-                } w-44 h-16 rounded-xl shadow-2xl
-                w-40 h-12 text-white flex items-center justify-center rounded-2xl shadow-xl`}
-              >
-                <Link href="/applynow">
-                  <h1 className="robotosimple text-xl font-regular ">REJECT</h1>
-                </Link>
-              </button>
-            </div>
+            )}
           </div>
         </div>
       </div>

@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import Cards from "../common/cards";
 import Filterbutton from "../common/filters";
 import cardSide from "./cards.json";
-import { useRouter } from 'next/router'
+import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { allBounties, allSubmissions } from "./query";
+import { useSorobanReact } from "@soroban-react/core";
 
 const filterMenu = [
   {
@@ -27,33 +28,35 @@ const filterMenu = [
 
 const LandingPage = () => {
   const [publicKey, setPublicKey] = useState("");
-  const [cardData, setCardData] = useState(cardSide.card[0]);
+  const [cardData, setCardData] = useState("");
   const [mobView, setMobView] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
+
+  const sorobanContext = useSorobanReact();
+  const { address } = sorobanContext || {};
 
   const { loading, data, error } = useQuery(allBounties);
 
-  const { data: submissionData, error:submissionError } = useQuery(allSubmissions, {
-    variables: { public_address: publicKey },
-  });
+  const { data: submissionData, error: submissionError } = useQuery(
+    allSubmissions,
+    {
+      variables: { public_address: publicKey },
+    }
+  );
 
   useEffect(() => {
-   
-    getKey();
+    if (address) {
+      getKey(address);
+    }
 
     if (data) {
       setCardData(data.all_bounties[0]);
     }
+  }, [data, submissionData, address]);
 
-    if(submissionData){
-      console.log(submissionData, "Submission")
-    }
-  }, [data, submissionData]);
-
-  const getKey = async () => {
-    if (window?.freighterApi?.getPublicKey()) {
-      setPublicKey(await window.freighterApi.getPublicKey());
-    }
+  const getKey = async (address) => {
+   
+      setPublicKey(address);
   };
 
   const pullData = (data) => {
@@ -63,11 +66,10 @@ const LandingPage = () => {
 
   const applyNow = (bountyId, bountyAddress) => {
     router.push({
-      pathname:'/applynow',
-      query: { id: bountyId, bountyAddress: bountyAddress}
-  })
-
-  }
+      pathname: "/applynow",
+      query: { id: bountyId, bountyAddress: bountyAddress },
+    });
+  };
   return (
     <>
       <section id="landingpage h-screen overflow-hidden">
@@ -85,7 +87,11 @@ const LandingPage = () => {
                 } overflow-y-auto h-[76vh] mt-2 lg:mt-0 lg:h-[72vh] rounded-xl shadow-xl`}
               >
                 {data?.all_bounties.map((item, index) => (
-                  <Cards data={item} callBack={pullData} publicKey={publicKey}/>
+                  <Cards
+                    data={item}
+                    callBack={pullData}
+                    publicKey={item.public_address}
+                  />
                 ))}
 
                 <div className="flex justify-center mt-5">
@@ -127,35 +133,21 @@ const LandingPage = () => {
                   <p className="text-sm">{cardData?.payment_amount} XLM</p>
                 </button>
                 <button
-                onClick={()=>applyNow(cardData.id,cardData.public_address)}
+                  onClick={() => applyNow(cardData.id, cardData.public_address)}
                   disabled={
                     !publicKey || publicKey === cardData?.public_address
                   }
                   className={`${
-                    publicKey && publicKey === cardData?.public_address ? "bg-darkColor" : "bg-lightPink"
+                      !publicKey ? 'bg-darkColor': publicKey === cardData?.public_address? "bg-darkColor":'bg-lightPink'
                   } w-52 h-16 rounded-xl shadow-2xl
                   w-40 h-12 flex items-center justify-center rounded-2xl shadow-xl`}
                 >
-        
-                    <h1 className="text-sm">Apply Now</h1>
+                  <a className="text-white font-semibold">Apply Now</a>
                 </button>
               </div>
 
               <div className="mt-14 overflow-y-auto h-[40%]">
                 <p className="robotosimple">{cardData?.bounty_description}</p>
-                <p className="robotosimple mt-5">
-                  As a bounty hunter for the Soroban Contract Writing in Rust,
-                  you will be responsible for thoroughly testing our platform
-                  and identifying any potential security vulnerabilities or
-                  bugs. You will be tasked with conducting comprehensive
-                  penetration testing and code review to ensure that our
-                  platform is secure, reliable, and efficient. Successful
-                  candidates will have a strong understanding of Rust
-                  development, as well as experience working with blockchain
-                  technology and smart contract writing. You should be
-                  comfortable working with cryptographic algorithms, as well as
-                  developing and testing secure, reliable, and efficient.
-                </p>
               </div>
             </div>
           </div>

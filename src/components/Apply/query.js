@@ -43,7 +43,17 @@ query MyQuery ($id: uuid!) {
        bounty_difficulty
        public_address
        id
+       Status
+       bounty_availability
     }
   }
+`
+
+export const updateBounty = gql`
+mutation MyMutation($id:uuid!) {
+  update_all_bounties_by_pk(_set:{Status:"IN ESCROW", bounty_availability:"PENDING"},pk_columns: {id: $id}) {
+    id
+  }
+}
 `
 

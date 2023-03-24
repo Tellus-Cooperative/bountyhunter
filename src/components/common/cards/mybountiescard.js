@@ -8,9 +8,10 @@ const {data:newData} = useQuery(newBounties, {
   variables: {id:data.bounty_id}
 })
 
-console.log(newData, "sldnfjsdjkfn")
+const color = newData?.all_bounties_by_pk?.Status ==="BOUNTY RETURNED"? 'bg-red': newData?.all_bounties_by_pk?.Status === "BOUNTY PAID" ? "bg-greenColor" : newData?.all_bounties_by_pk?.Status ==="IN ESCROW" ? 'bg-lightOrange':'bg-blueColor'
+const colorAvailability = newData?.all_bounties_by_pk?.bounty_availability ==="REJECTED"? 'bg-red': newData?.all_bounties_by_pk?.bounty_availability === "APPROVED" ? "bg-greenColor" : newData?.all_bounties_by_pk?.bounty_availability ==="PENDING" ? 'bg-lightOrange':'bg-blueColor'
 
-console.log(data, "I am data")
+
   return (
     <section onClick={()=> callBack(newData.all_bounties_by_pk)} id="cards" className="cursor-pointer">
       <div className="cardContainer rounded-2xl mt-4 bg-cardscolor py-6 px-6 lg:px-10 shadow-xl">
@@ -37,11 +38,11 @@ console.log(data, "I am data")
 
           <div className="mt-4">
             <div className="flex flex-wrap lg:space-x-3 justify-between">
-              <button className="bg-blueColor mb-4 w-36 lg:w-40 h-10 flex items-center justify-center rounded-2xl text-white">
-                <p className="text-sm">IN ESCROW </p>
+              <button className={`${color} mb-4 w-36 lg:w-40 h-10 flex items-center justify-center rounded-2xl text-white`}>
+                <p className="text-sm">{newData?.all_bounties_by_pk?.Status} </p>
               </button>
-              <button className="bg-blueColor mb-4 ml-3 lg:0 w-36 lg:w-40 h-10 flex items-center justify-center rounded-2xl text-white">
-                <p className="text-sm">PENDING</p>
+              <button className={`${colorAvailability} mb-4 ml-3 lg:0 w-36 lg:w-40 h-10 flex items-center justify-center rounded-2xl text-white`}>
+                <p className="text-sm">{newData?.all_bounties_by_pk?.bounty_availability}</p>
               </button>
             </div>
           </div>

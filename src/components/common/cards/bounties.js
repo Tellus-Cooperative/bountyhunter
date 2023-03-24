@@ -1,11 +1,24 @@
 import React from "react";
 import { newBounties } from "../../Apply/query";
 import { useMutation, useQuery } from "@apollo/client";
+import { useRouter } from 'next/router';
 
-const MyBountiesCard = ({data, publicKey}) => {
+const MyBountiesCard = ({data, publicKey,callBack}) => {
+  
+  const router = useRouter();
+
+  const color = data.Status ==="BOUNTY RETURNED"? 'bg-red': data.Status === "BOUNTY PAID" ? "bg-greenColor" : data.Status ==="IN ESCROW" ? 'bg-lightOrange':'bg-blueColor'
+  const colorAvailability = data.bounty_availability ==="REJECTED"? 'bg-red': data.bounty_availability === "APPROVED" ? "bg-greenColor" : data.bounty_availability ==="PENDING" ? 'bg-lightOrange':'bg-blueColor'
+
+
+  const handleCardClick = (data) => {
+
+    callBack(data)
+  }
+
 
   return (
-    <section id="cards" className="cursor-pointer">
+    <section id="cards" onClick={() => handleCardClick(data)} className="cursor-pointer">
       <div className="cardContainer rounded-2xl mt-4 bg-cardscolor py-6 px-6 lg:px-10 shadow-xl">
         <div className="flex">
           <div className="hidden lg:block w-2/12">
@@ -30,11 +43,11 @@ const MyBountiesCard = ({data, publicKey}) => {
 
           <div className="mt-4">
             <div className="flex flex-wrap lg:space-x-3 justify-between">
-              <button className="bg-blueColor mb-4 w-36 lg:w-40 h-10 flex items-center justify-center rounded-2xl text-white">
-                <p className="text-sm">IN ESCROW </p>
+              <button className={`${color} mb-4 w-36 lg:w-40 h-10 flex items-center justify-center rounded-2xl text-white`}>
+                <p className="text-sm">{data?.Status} </p>
               </button>
-              <button className="bg-blueColor mb-4 ml-3 lg:0 w-36 lg:w-40 h-10 flex items-center justify-center rounded-2xl text-white">
-                <p className="text-sm">PENDING</p>
+              <button className={`${colorAvailability} mb-4 ml-3 lg:0 w-36 lg:w-40 h-10 flex items-center justify-center rounded-2xl text-white`}>
+                <p className="text-sm">{data?.bounty_availability}</p>
               </button>
             </div>
           </div>

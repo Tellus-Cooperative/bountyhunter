@@ -2,7 +2,6 @@ import React from "react";
 
 const Cards = ({data,callBack,publicKey}) => {
 
-
   return (
     <section onClick={()=> callBack(data)} id="cards" className="cursor-pointer">
       <div className="cardContainer rounded-2xl mt-4 bg-cardscolor py-6 px-6 lg:px-10 shadow-xl">
