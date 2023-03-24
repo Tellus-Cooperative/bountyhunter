@@ -10,6 +10,7 @@ Our goal is to create an open source bounty hunting application that allows user
 - [x] New Bounties Page
 - [x] Apply Form
 - [x] Reviewer Form 
+- [x] Lobster Id image service #8
 - [ ] i18n English/Spanish https://github.com/Tellus-Cooperative/bountyhunter/issues/7
 - [ ] Implement Rust contract
 
