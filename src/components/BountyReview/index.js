@@ -197,7 +197,7 @@ const BountyReview = () => {
                 {bountySubmittedData?.submissions.length == 0 && (
                   <div className="mt-20 flex justify-center">
                     <h2 className="text-2xl">
-                      No one has submission against this bounty
+                      This bounty has no submissions yet.
                     </h2>
                   </div>
                 )}
@@ -206,7 +206,7 @@ const BountyReview = () => {
 
             {!bountyDeclaredId && (
               <div className="flex justify-center mt-10">
-                <h1 className="text-2xl">Please Select a bounty first</h1>
+                <h1 className="text-2xl">Please select a bounty first</h1>
               </div>
             )}
           </div>
